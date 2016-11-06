@@ -3,6 +3,7 @@ package org.devathon.contest2016.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -36,9 +37,11 @@ public class MaskinrListener implements Listener {
 
 				@Override
 				public void run() {
-					if(DevathonPlugin.getLearner().annaStand != null)
+					if(DevathonPlugin.getLearner().annaStand != null) {
 						DevathonPlugin.getLearner().annaStand.remove();
-					
+						DevathonPlugin.getLearner().annaStand = null;
+					}
+
 					DevathonPlugin.getLearner().annaStand = AnnaStand.createAnnaStand(p.getLocation());
 				}
 
@@ -50,11 +53,11 @@ public class MaskinrListener implements Listener {
 
 		DevathonPlugin.getLearner().getAI().sentences.add(e.getMessage());
 	}
-	
+
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		
+
 		if(DevathonPlugin.getLearner().annaStand == null) {
 			p.sendMessage(ChatColor.RED + "Hey! You should spawn a Anna. Do it by typing \"!create\" in chat.");
 		}
@@ -64,8 +67,14 @@ public class MaskinrListener implements Listener {
 	public void onMove(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
 
-		if(DevathonPlugin.getLearner().annaStand != null) {
-			DevathonPlugin.getLearner().annaStand.updateFaceDirection(p.getLocation());
+		for (Entity en : p.getNearbyEntities(20.0D, 20.0D, 20.D)) {
+			if(en instanceof ArmorStand) {
+				if(en.getCustomName().equals("§6§lAnna")) {
+					if(DevathonPlugin.getLearner().annaStand != null) {
+						DevathonPlugin.getLearner().annaStand.updateFaceDirection(p.getLocation());
+					}
+				}
+			}
 		}
 	}
 
@@ -73,29 +82,35 @@ public class MaskinrListener implements Listener {
 	public void onInteract(PlayerInteractAtEntityEvent e) {
 		Player p = e.getPlayer();
 		if(e.getRightClicked() instanceof ArmorStand) {
-			p.sendMessage(ChatColor.GOLD + "Hello! My name is Anna. I am a computing machine, and definetly your only possible future girlfriend.");
-			p.sendMessage(ChatColor.GOLD + "You can ask me any question, and I'll try to answer it!");
-			p.sendMessage(ChatColor.GRAY + "Type a message into the chat starting with \"!bot\" to ask me stuff..");
-			e.setCancelled(true);
+			if(e.getRightClicked().getCustomName().equals("§6§lAnna")) {
+				AnnaStand stand = DevathonPlugin.getLearner().annaStand;
+				if(stand != null) {
+					stand.talkToPlayer(p);
+				}
+				
+				e.setCancelled(true);
+			}
 		}
 	}
 
 	@EventHandler
 	public void ArmorStandDestroy(EntityDamageByEntityEvent e){
-		if (!(e.getEntity() instanceof LivingEntity)) {
+		if (!(e.getEntity() instanceof LivingEntity))
 			return;
-		}
-
+		
 		final LivingEntity livingEntity = (LivingEntity)e.getEntity();
-		if(!livingEntity.getType().equals(EntityType.ARMOR_STAND)){
+		if(!livingEntity.getType().equals(EntityType.ARMOR_STAND))
 			return;
-		}
 
+		if(!livingEntity.getCustomName().equals("§6§lAnna"))
+			return;
+		
 		if(e.getDamager() instanceof Player) {
 			Player p = (Player) e.getDamager();
-			p.sendMessage(ChatColor.GOLD + "Hello! My name is Anna. I am a computing machine, and definetly your only possible future girlfriend.");
-			p.sendMessage(ChatColor.GOLD + "You can ask me any question, and I'll try to answer it!");
-			p.sendMessage(ChatColor.GRAY + "Type a message into the chat starting with \"!bot\" to ask me stuff..");
+			AnnaStand stand = DevathonPlugin.getLearner().annaStand;
+			if(stand != null) {
+				stand.talkToPlayer(p);
+			}
 		}
 
 		e.setCancelled(true);

@@ -1,7 +1,6 @@
-name: Devathon Project
-description: A project for the Devathon contest
-version: 1.0.0
-author: Your Name Here
+name: Anna
+description: Anna - The computing machine (or just a bot?)
+version: 0.5.1-BETA
+author: OscarWoHA
 
 main: org.devathon.contest2016.DevathonPlugin
-

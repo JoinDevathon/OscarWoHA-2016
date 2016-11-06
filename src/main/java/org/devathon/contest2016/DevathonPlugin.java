@@ -16,35 +16,32 @@ public class DevathonPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		_l.info("DevathonPlugin loading....");
+		_l.info("Anna - the computing machine | Loading....");
 		saveDefaultConfig();
 
 		learner = new Learner();
 		List<String> sentences = getConfig().getStringList("learned");
 		learner.getAI().sentences.addAll(sentences);
 
-		ConfigurationSection annas = getConfig().getConfigurationSection("stands");
+		ConfigurationSection annas = getConfig().getConfigurationSection("anna");
 		if(annas != null) {
-			for(String ankey : annas.getKeys(false)) {
-				Location l = (Location) annas.get(ankey + ".location");
-				learner.annaStand = AnnaStand.createAnnaStand(l);
-			}
+			Location l = (Location) annas.get("location");
+			learner.annaStand = AnnaStand.createAnnaStand(l);
 		}
 
-		_l.info("Listener loading....");
+		_l.info("Anna - the computing machine | Initializing listener....");
 		getServer().getPluginManager().registerEvents(new MaskinrListener(), this);
 	}
 
 	@Override
 	public void onDisable() {
-		_l.info("Shutting down");
+		_l.info("Anna - the computing machine | Shutting down...");
 
 		getConfig().set("learned", learner.getAI().sentences.toArray(new String[] {}));
-		int id = 0;
-		getConfig().set("stands." + id + ".location", learner.annaStand.getStand().getLocation());
-		learner.annaStand.remove();
-
+		getConfig().set("anna.location", learner.annaStand.getStand().getLocation());
 		saveConfig();
+		
+		learner.annaStand.remove();
 	}
 
 	public static Learner getLearner() {

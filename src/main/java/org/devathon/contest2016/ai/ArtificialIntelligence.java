@@ -52,9 +52,9 @@ public class ArtificialIntelligence {
 			}
 		}
 
-        if(leader == null) {
-            return "Grr.. Couldn't find an answer for you baby.";
-        }
+		if(leader == null) {
+			return "Grr.. Couldn't find an answer for you baby.";
+		}
 
 		System.out.println("Best match is \"" + leader.getKey() + "\" with " + leader.getValue() + " matches..");
 		return leader.getKey();
