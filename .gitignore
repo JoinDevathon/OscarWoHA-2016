@@ -1,4 +1,6 @@
 build/
 server/
 target/
-/bin/
+.settings/
+.classpath
+.project
