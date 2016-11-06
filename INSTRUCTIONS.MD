@@ -1,4 +1,4 @@
-#Anna - The bot
+#Anna - The computing machine...I mean..your next girlfriend?
 Can't find Anna? Please write "!create" in chat, and Anna will spawn right where you are.
 
 ##Description
